@@ -1,6 +1,6 @@
 # Home Rentals Admin Dashboard
 
-A simple, polished admin dashboard for reviewing rental properties and checking current weather for a selected property location. This project was built as a take-home technical interview submission with a focus on React fundamentals, routing, practical API integration, responsive UI, and clear trade-offs.
+A simple, polished admin dashboard for reviewing Costa Rica rental properties and checking current weather for a selected property location. This project was built as a take-home technical interview submission with a focus on React fundamentals, routing, practical API integration, responsive UI, and clear trade-offs.
 
 ## Live Links
 
@@ -22,7 +22,7 @@ A simple, polished admin dashboard for reviewing rental properties and checking 
 - Friendly validation for missing fields, invalid email format, and invalid credentials.
 - Protected dashboard and property detail routes.
 - Logout flow that clears the auth flag and redirects to login.
-- Responsive property dashboard with five realistic mock rental properties.
+- Responsive property dashboard with five Costa Rica-focused mock rental properties.
 - Property detail page with image, address, description, pricing, capacity, and status metadata.
 - Reusable weather service that fetches by latitude and longitude.
 - Weather loading and error states.
@@ -77,7 +77,7 @@ The API key is intentionally loaded from an environment variable and is not comm
 - **Next.js App Router:** Chosen for professional project structure, file-based routing, and straightforward Vercel deployment.
 - **TypeScript:** Used to make data models, component props, and weather API responses easier to reason about during review.
 - **Frontend-only auth:** The assignment does not require a backend, so authentication is deliberately scoped to a local demo flag in `localStorage`. This keeps the project focused on UI flow, route protection, and interview-relevant trade-offs.
-- **Mock property data:** Local TypeScript data keeps the app deterministic, easy to demo, and easy to explain within a five-hour time limit.
+- **Mock property data:** Local TypeScript data keeps the app deterministic, easy to demo, and tailored to a Costa Rica rental portfolio within a five-hour time limit.
 - **Client-side weather integration:** Weather is fetched from a reusable service using property coordinates. When no API key exists, the service returns mock data after a small delay so loading states remain visible.
 - **Plain CSS:** Avoids extra UI dependencies while still providing a polished responsive admin experience.
 

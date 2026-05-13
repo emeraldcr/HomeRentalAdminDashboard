@@ -23,7 +23,7 @@ In a production version, I would replace this with backend authentication, secur
 
 Mock property data keeps the demo deterministic and avoids spending interview time on backend setup, database schema, migrations, seed scripts, or hosting. This was a deliberate scope decision to focus on the requested UI, routing, component structure, and weather API integration.
 
-The data is still structured like a realistic API model, with fields such as `id`, `name`, `address`, `city`, `country`, `price`, `imageUrl`, `latitude`, and `longitude`, so it could be replaced with an API response later.
+The data is tailored to a Costa Rica rental company while still being structured like a realistic API model, with fields such as `id`, `name`, `address`, `city`, `country`, `price`, `imageUrl`, `latitude`, and `longitude`, so it could be replaced with an API response later.
 
 ## How the Weather API Integration Works
 
