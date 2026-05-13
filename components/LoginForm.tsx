@@ -1,15 +1,91 @@
 "use client";
 
+import Script from "next/script";
 import { useRouter, useSearchParams } from "next/navigation";
-import { FormEvent, useState } from "react";
-import { DEMO_EMAIL, DEMO_PASSWORD, login } from "@/lib/auth";
+import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
+import { DEMO_EMAIL, DEMO_PASSWORD, login, loginWithGoogle } from "@/lib/auth";
+
+type GoogleCredentialResponse = {
+  credential?: string;
+};
+
+type GoogleIdentityServices = {
+  accounts: {
+    id: {
+      initialize: (options: {
+        callback: (response: GoogleCredentialResponse) => void;
+        client_id: string;
+      }) => void;
+      renderButton: (
+        parent: HTMLElement,
+        options: {
+          logo_alignment?: "left" | "center";
+          shape?: "pill" | "rectangular" | "circle" | "square";
+          size?: "large" | "medium" | "small";
+          text?: "signin_with" | "signup_with" | "continue_with" | "signin";
+          theme?: "outline" | "filled_blue" | "filled_black";
+          width?: number;
+        },
+      ) => void;
+    };
+  };
+};
+
+declare global {
+  interface Window {
+    google?: GoogleIdentityServices;
+  }
+}
+
+const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 
 export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const googleButtonRef = useRef<HTMLDivElement>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [googleError, setGoogleError] = useState("");
+  const [isGoogleReady, setIsGoogleReady] = useState(false);
+
+  const redirectAfterLogin = useCallback(() => {
+    router.replace(searchParams.get("redirect") || "/");
+  }, [router, searchParams]);
+
+  const handleGoogleCredential = useCallback(
+    (response: GoogleCredentialResponse) => {
+      setGoogleError("");
+
+      if (!response.credential || !loginWithGoogle(response.credential)) {
+        setGoogleError("We could not verify your Google account. Please try again.");
+        return;
+      }
+
+      redirectAfterLogin();
+    },
+    [redirectAfterLogin],
+  );
+
+  useEffect(() => {
+    if (!googleClientId || !isGoogleReady || !googleButtonRef.current || !window.google) {
+      return;
+    }
+
+    googleButtonRef.current.innerHTML = "";
+    window.google.accounts.id.initialize({
+      callback: handleGoogleCredential,
+      client_id: googleClientId,
+    });
+    window.google.accounts.id.renderButton(googleButtonRef.current, {
+      logo_alignment: "left",
+      shape: "pill",
+      size: "large",
+      text: "continue_with",
+      theme: "outline",
+      width: googleButtonRef.current.offsetWidth || 320,
+    });
+  }, [handleGoogleCredential, isGoogleReady]);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -30,11 +106,20 @@ export function LoginForm() {
       return;
     }
 
-    router.replace(searchParams.get("redirect") || "/");
+    redirectAfterLogin();
   }
 
   return (
     <section className="login-layout" aria-label="Home Rentals admin sign in">
+      {googleClientId ? (
+        <Script
+          src="https://accounts.google.com/gsi/client"
+          strategy="afterInteractive"
+          onLoad={() => setIsGoogleReady(true)}
+          onError={() => setGoogleError("Google sign-in is unavailable right now.")}
+        />
+      ) : null}
+
       <aside className="login-showcase" aria-hidden="true">
         <div className="login-showcase__badge">Live portfolio overview</div>
         <div className="login-showcase__content">
@@ -66,7 +151,20 @@ export function LoginForm() {
         <div className="login-card__intro">
           <p className="eyebrow">Home Rentals Admin</p>
           <h1>Welcome back</h1>
-          <p>Sign in to review rental properties and location weather.</p>
+          <p>Sign in with Google or use the demo credentials to review rentals.</p>
+        </div>
+
+        <div className="google-signin-panel">
+          <div className="google-signin-panel__button" ref={googleButtonRef}>
+            {!googleClientId ? (
+              <span>Add NEXT_PUBLIC_GOOGLE_CLIENT_ID to enable Google sign-in.</span>
+            ) : null}
+          </div>
+          {googleError ? <p className="form-error" role="alert">{googleError}</p> : null}
+        </div>
+
+        <div className="login-divider">
+          <span>or continue with demo access</span>
         </div>
 
         <label>
