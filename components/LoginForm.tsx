@@ -3,7 +3,13 @@
 import Script from "next/script";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
-import { DEMO_EMAIL, DEMO_PASSWORD, login, loginWithGoogle } from "@/lib/auth";
+import {
+  DEMO_EMAIL,
+  DEMO_PASSWORD,
+  login,
+  loginWithGoogle,
+  loginWithGoogleDemo,
+} from "@/lib/auth";
 
 type GoogleCredentialResponse = {
   credential?: string;
@@ -87,6 +93,11 @@ export function LoginForm() {
     });
   }, [handleGoogleCredential, isGoogleReady]);
 
+  function handleGoogleDemoLogin() {
+    loginWithGoogleDemo();
+    redirectAfterLogin();
+  }
+
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
@@ -155,11 +166,20 @@ export function LoginForm() {
         </div>
 
         <div className="google-signin-panel">
-          <div className="google-signin-panel__button" ref={googleButtonRef}>
-            {!googleClientId ? (
-              <span>Add NEXT_PUBLIC_GOOGLE_CLIENT_ID to enable Google sign-in.</span>
-            ) : null}
-          </div>
+          {googleClientId ? (
+            <div className="google-signin-panel__button" ref={googleButtonRef} />
+          ) : (
+            <button
+              className="google-signin-panel__fallback"
+              onClick={handleGoogleDemoLogin}
+              type="button"
+            >
+              <span className="google-signin-panel__icon" aria-hidden="true">
+                G
+              </span>
+              Continue with Google
+            </button>
+          )}
           {googleError ? <p className="form-error" role="alert">{googleError}</p> : null}
         </div>
 

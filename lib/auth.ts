@@ -12,6 +12,12 @@ export type AuthenticatedUser = {
   provider: AuthProvider;
 };
 
+const DEMO_GOOGLE_USER: AuthenticatedUser = {
+  email: "google.admin@homerentals.com",
+  name: "Google Demo Admin",
+  provider: "google",
+};
+
 type GoogleIdTokenPayload = {
   aud?: string;
   email?: string;
@@ -39,6 +45,11 @@ export function login(email: string, password: string) {
   }
 
   return isValid;
+}
+
+export function loginWithGoogleDemo() {
+  persistAuth(DEMO_GOOGLE_USER);
+  return true;
 }
 
 export function loginWithGoogle(credential: string) {

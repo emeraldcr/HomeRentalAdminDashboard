@@ -57,7 +57,7 @@ Password: Admin123!
    NEXT_PUBLIC_GOOGLE_CLIENT_ID=your_google_web_client_id
    ```
 
-   For Google sign-in, create an OAuth 2.0 Web Client ID in Google Cloud Console and add your local/deployed URL to **Authorized JavaScript origins**.
+   This value is optional. Without it, the app still shows a Google-style demo sign-in button that grants demo access immediately. For real Google OAuth verification, create an OAuth 2.0 Web Client ID in Google Cloud Console and add your local/deployed URL to **Authorized JavaScript origins**.
 
 4. Start the development server:
 
@@ -65,14 +65,14 @@ Password: Admin123!
    npm run dev
    ```
 
-5. Open [http://localhost:3000](http://localhost:3000) and sign in with the demo credentials above.
+5. Open [http://localhost:3000](http://localhost:3000) and sign in with the Google demo button or the demo credentials above.
 
 ## Environment Variables
 
 | Variable | Required | Description |
 | --- | --- | --- |
 | `NEXT_PUBLIC_OPENWEATHER_API_KEY` | No | Optional OpenWeatherMap API key used by the client-side weather service. If omitted, the app returns realistic mock weather so reviewers can run the project immediately. |
-| `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | No | Optional Google OAuth 2.0 Web Client ID used by Google Identity Services on the login page. If omitted, the login page keeps demo credential access enabled and shows a setup note in the Google sign-in area. |
+| `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | No | Optional Google OAuth 2.0 Web Client ID used by Google Identity Services on the login page. If omitted, the login page shows a Google-style demo sign-in button that lets reviewers enter without extra setup. |
 
 The API keys are intentionally loaded from environment variables and are not committed to source control. Because these are client-side demo integrations, `NEXT_PUBLIC_` values are visible in the browser bundle. A production app should verify Google ID tokens and proxy weather requests through a backend or serverless route to avoid trusting client-only authentication or exposing provider keys unnecessarily.
 
@@ -80,7 +80,7 @@ The API keys are intentionally loaded from environment variables and are not com
 
 - **Next.js App Router:** Chosen for professional project structure, file-based routing, and straightforward Vercel deployment.
 - **TypeScript:** Used to make data models, component props, and weather API responses easier to reason about during review.
-- **Frontend-only auth:** The assignment does not require a backend, so authentication is deliberately scoped to a local demo flag in `localStorage`. Google Identity Services can provide a verified Google account token to the browser, but this demo stores the resulting access state client-side; a production app should verify the ID token server-side and create a secure session.
+- **Frontend-only auth:** The assignment does not require a backend, so authentication is deliberately scoped to a local demo flag in `localStorage`. If `NEXT_PUBLIC_GOOGLE_CLIENT_ID` is configured, Google Identity Services can provide a verified Google account token to the browser; otherwise, the Google-style button signs in with a demo Google profile so reviewers do not need setup. A production app should verify the ID token server-side and create a secure session.
 - **Mock property data:** Local TypeScript data keeps the app deterministic, easy to demo, and tailored to a Costa Rica rental portfolio within a five-hour time limit.
 - **Client-side weather integration:** Weather is fetched from a reusable service using property coordinates. When no API key exists, the service returns mock data after a small delay so loading states remain visible.
 - **Plain CSS:** Avoids extra UI dependencies while still providing a polished responsive admin experience.

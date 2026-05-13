@@ -284,17 +284,18 @@ input {
   gap: 0.75rem;
 }
 
-.google-signin-panel__button {
+.google-signin-panel__button,
+.google-signin-panel__fallback {
   align-items: center;
   background: #ffffff;
-  border: 1px dashed var(--border);
+  border: 1px solid var(--border);
   border-radius: 999px;
-  color: var(--muted);
+  color: #344054;
   display: flex;
-  font-size: 0.9rem;
-  font-weight: 700;
+  font-size: 0.95rem;
+  font-weight: 800;
   justify-content: center;
-  min-height: 2.75rem;
+  min-height: 2.85rem;
   overflow: hidden;
   text-align: center;
   width: 100%;
@@ -302,6 +303,31 @@ input {
 
 .google-signin-panel__button > div {
   width: 100%;
+}
+
+.google-signin-panel__fallback {
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.06);
+  cursor: pointer;
+  gap: 0.65rem;
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.google-signin-panel__fallback:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 14px 24px rgba(15, 23, 42, 0.09);
+  transform: translateY(-1px);
+}
+
+.google-signin-panel__icon {
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: #2563eb;
+  display: inline-flex;
+  font-weight: 900;
+  height: 1.6rem;
+  justify-content: center;
+  width: 1.6rem;
 }
 
 .login-divider {
